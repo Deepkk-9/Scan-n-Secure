@@ -1,15 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import LoginScreen from './Screens/LoginScreen';
-import ScanInfoBtnScreen from './Screens/ScanInfoBtnScreen';
+import InfoBtnScreen from './Screens/InfoBtnScreen';
 import ScanningScreen from './Screens/ScanningScreen';
+import QRCodeScreen from './Screens/QRCodeScreen';
+import StudentDataOnScannedScreen from './Screens/StudentDataOnScannedScreen';
 
 export default function App() {
   return (
     <View style={styles.container}>
       {/* <LoginScreen /> */}
-      {/* <ScanInfoBtnScreen /> */}
-      <ScanningScreen />
+      {/* <InfoBtnScreen title="Verify a Student" btnDesc="Scan QR Code" /> */}
+      {/* <InfoBtnScreen title="QR Code for verification" btnDesc="Show QR Code" /> */}
+      {/* <ScanningScreen /> */}
+      {/* <QRCodeScreen userMail="kawaledeep9@gmail.com" /> */}
+      <StudentDataOnScannedScreen />
     </View>
   );
 }

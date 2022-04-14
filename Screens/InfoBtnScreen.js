@@ -9,7 +9,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 
-const ScanInfoBtnPage = () => {
+const ScanInfoBtnPage = (props) => {
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
     });
@@ -20,11 +20,15 @@ const ScanInfoBtnPage = () => {
         return (
             <View style={styles.container}>
                 <Image source={require('../assets/mes-logo.png')} style={styles.logo} />
-                <Text style={styles.txt}>Verify a Student</Text>
+
+                <Text style={styles.txt}>
+                    {props.title}
+                </Text>
+
                 <TouchableOpacity style={{ marginVertical: 20 }}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
-                            Scan QR Code
+                            {props.btnDesc}
                         </Text>
                         <MaterialIcons name="qr-code-scanner" size={32} color="white" style={styles.qrMIcon} />
                     </LinearGradient>
@@ -36,19 +40,19 @@ const ScanInfoBtnPage = () => {
         )
     }
 }
-                    
+
 export default ScanInfoBtnPage
-                    
-                    const styles = StyleSheet.create({
-                        container: {
+
+const styles = StyleSheet.create({
+    container: {
         height: "100%",
         width: "100%",
         alignItems: 'center',
-                            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
     },
-                    
-                        logo: {
-                            height: 150,
+
+    logo: {
+        height: 150,
         width: 150,
         marginVertical: 40
     },
