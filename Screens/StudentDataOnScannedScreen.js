@@ -1,57 +1,50 @@
-import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Platform, StatusBar, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore/lite';
+import { db } from '../firebase';
+
 
 const StudentDataOnScannedScreen = () => {
+
+
+    const [details, setDetails] = useState({});
+
+    useEffect(() => {
+        const getStudentDetails = async () => {
+            const StudentCol = collection(db, 'Students');
+            const studentSnapshot = await getDocs(StudentCol);
+            const studentList = studentSnapshot.docs.map(doc => doc.data());
+
+            setDetails(...studentList)
+
+            console.log(details);
+        }
+
+        getStudentDetails();
+
+    }, [])
+
+
+
     return (
         <View style={styles.container}>
             <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
+                <Text>Department: </Text>
+                <Text> {details.dept} </Text>
+            </View>
+            <View style={styles.arr}>
+                <Text>Email: </Text>
+                <Text>{details.email}</Text>
             </View>
             <View style={styles.arr}>
                 <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
+                <Text> {details.name} </Text>
             </View>
             <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
+                <Text>Phone No. : </Text>
+                <Text> {details.phno} </Text>
             </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text>Deep Kawale</Text>
-            </View>
+            {/* <Button title='Get Student Data' onPress={getStudentDetails} /> */}
         </View>
     )
 }
@@ -73,6 +66,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-evenly",
-        marginVertical: 5
+        marginVertical: 15
     }
 })

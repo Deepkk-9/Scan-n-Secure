@@ -1,18 +1,40 @@
 import { StyleSheet, Text, View, Image, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import AppLoading from 'expo-app-loading';
+import { signOut } from "firebase/auth";
+import { auth } from '../firebase';
 import {
     useFonts,
     Poppins_400Regular,
 } from '@expo-google-fonts/poppins';
 
 
-const InfoBtnScreen = (props) => {
+const InfoBtnScreen = ({ navigation, route }) => {
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
     });
+
+    const { title, btnDesc, type } = route.params;
+
+    const handleCamQr = () => {
+        if (type === "T") {
+            // navigation.navigate('Scan');
+            navigation.navigate('Details');
+        }
+        if (type === "S") {
+            navigation.navigate('QRCode')
+        }
+    }
+
+    const handleSignOut = () => {
+        signOut(auth).then((re) => {
+            console.log(re)
+        }).catch((error) => {
+            console.log(error)
+        });
+    }
 
     if (!fontsLoaded) {
         return <AppLoading />;
@@ -22,15 +44,21 @@ const InfoBtnScreen = (props) => {
                 <Image source={require('../assets/mes-logo.png')} style={styles.logo} />
 
                 <Text style={styles.txt}>
-                    {props.title}
+                    {title}
                 </Text>
 
-                <TouchableOpacity style={{ marginVertical: 20 }}>
+                <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleCamQr}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
-                            {props.btnDesc}
+                            {btnDesc}
                         </Text>
                         <MaterialIcons name="qr-code-scanner" size={32} color="white" style={styles.qrMIcon} />
+                    </LinearGradient>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleSignOut}>
+                    <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
+                        <FontAwesome name="sign-out" size={24} color="white" style={styles.qrMIcon} />
                     </LinearGradient>
                 </TouchableOpacity>
 
@@ -49,6 +77,7 @@ const styles = StyleSheet.create({
         width: "100%",
         alignItems: 'center',
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+        backgroundColor: "#fff"
     },
 
     logo: {

@@ -8,7 +8,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-const ScanningScreen = () => {
+const ScanningScreen = ({ navigation, route }) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -26,6 +26,9 @@ const ScanningScreen = () => {
         setScanned(false);
     };
 
+    const handleScanBack = () => {
+        navigation.goBack();
+    }
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
@@ -46,7 +49,7 @@ const ScanningScreen = () => {
                     <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} />
                 </LinearGradient>
 
-                <TouchableOpacity style={{ marginVertical: 20 }}>
+                <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleScanBack}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
                             Back

@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export const AuthStackT = () => {
     return (
         <Stack.Navigator initialRouteName='IB'>
-            <Stack.Screen name='IBT' component={InfoBtnScreen} options={{ headerShown: false }} />
+            <Stack.Screen name='IBT' component={InfoBtnScreen} options={{ headerShown: false }} initialParams={{ title: "Verify a Student", btnDesc: "Scan QR Code", type: "T" }} />
             <Stack.Screen name='Scan' component={ScanningScreen} options={{ headerShown: false }} />
             <Stack.Screen name='Details' component={StudentDataOnScannedScreen} options={{ headerShown: false }} />
         </Stack.Navigator>

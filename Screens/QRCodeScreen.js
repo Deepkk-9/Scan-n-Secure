@@ -8,10 +8,14 @@ import {
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const QRCodeScreen = (props) => {
+const QRCodeScreen = ({ navigation, route }) => {
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
     });
+
+    const handleQRBack = () => {
+        navigation.goBack();
+    }
 
     if (!fontsLoaded) {
         return <AppLoading />;
@@ -22,12 +26,15 @@ const QRCodeScreen = (props) => {
                     <View style={styles.dpCont}>
                         <Image source={require('../assets/dp.png')} resizeMode="contain" style={styles.dp} />
                     </View>
-                    <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>{props.userMail}</Text>
+                    <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>Temp@domain</Text>
 
-                    <QRCode value={props.userMail} size={250} />
+                    <QRCode
+                        // value={props.userMail} 
+                        value='deepkika2019php@student.mes.ac.in'
+                        size={250} />
                 </View>
 
-                <TouchableOpacity style={{ marginVertical: 50 }}>
+                <TouchableOpacity style={{ marginVertical: 50 }} onPress={handleQRBack}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
                             Back
