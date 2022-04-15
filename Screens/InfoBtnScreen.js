@@ -9,7 +9,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 
-const ScanInfoBtnPage = (props) => {
+const InfoBtnScreen = (props) => {
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
     });
@@ -41,7 +41,7 @@ const ScanInfoBtnPage = (props) => {
     }
 }
 
-export default ScanInfoBtnPage
+export default InfoBtnScreen;
 
 const styles = StyleSheet.create({
     container: {

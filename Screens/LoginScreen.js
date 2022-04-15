@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppLoading from 'expo-app-loading';
 import {
@@ -7,12 +7,34 @@ import {
     Poppins_700Bold,
     Poppins_400Regular,
 } from '@expo-google-fonts/poppins';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const LoginScreen = () => {
+
+
+const LoginScreen = ({ navigation }) => {
+
     let [fontsLoaded] = useFonts({
         Poppins_700Bold,
         Poppins_400Regular,
     });
+
+    const [mail, setMail] = useState();
+    const [pass, setPass] = useState();
+    const [loginCheck, setLoginCheck] = useState(null);
+
+    const userLogin = () => {
+        signInWithEmailAndPassword(auth, mail, pass)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log(user);
+                // ...
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     if (!fontsLoaded) {
         return <AppLoading />;
@@ -30,10 +52,22 @@ const LoginScreen = () => {
 
                     <Image source={require('../assets/pillai-logo.png')} style={styles.logo} resizeMode="contain" />
 
-                    <TextInput style={styles.inputs} placeholder="email@mes.ac.in" />
-                    <TextInput style={styles.inputs} placeholder="**********" secureTextEntry autoCapitalize='none' autoCorrect={false} />
+                    <TextInput
+                        style={styles.inputs}
+                        placeholder="email@mes.ac.in"
+                        onChangeText={text => setMail(text)}
+                        value={mail} />
 
-                    <TouchableOpacity style={styles.loginBtn} >
+                    <TextInput
+                        style={styles.inputs}
+                        placeholder="**********"
+                        secureTextEntry
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        onChangeText={text => setPass(text)}
+                        value={pass} />
+
+                    <TouchableOpacity style={styles.loginBtn} onPress={userLogin}>
                         <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16, fontFamily: "Poppins_400Regular" }} >Login</Text>
                     </TouchableOpacity>
 
@@ -41,7 +75,7 @@ const LoginScreen = () => {
                         or
                     </Text>
 
-                    <TouchableOpacity style={styles.loginBtn} >
+                    <TouchableOpacity style={styles.loginBtn}>
                         <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16, fontFamily: "Poppins_400Regular" }} >Login</Text>
                     </TouchableOpacity>
                 </View>
@@ -50,7 +84,7 @@ const LoginScreen = () => {
     }
 }
 
-export default LoginScreen
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     container: {
