@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Platform, Button } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppLoading from 'expo-app-loading';
 import {
@@ -7,11 +7,21 @@ import {
     Poppins_400Regular,
 } from '@expo-google-fonts/poppins';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { auth } from '../firebase';
+
 
 const ScanningScreen = ({ navigation, route }) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const isFocused = useIsFocused();
+
+    useFocusEffect(
+        useCallback(() => {
+            setScanned(false);
+        }, [])
+    )
 
     useEffect(() => {
         (async () => {
@@ -20,11 +30,17 @@ const ScanningScreen = ({ navigation, route }) => {
         })();
     }, []);
 
+
+
     const handleBarCodeScanned = ({ type, data }) => {
-        setScanned(true);
-        alert(`Type : ${type} \n Data : ${data}`);
-        setScanned(false);
-    };
+        if (data === auth.currentUser.email) {
+            console.log("On scaned data : " + data);
+            setScanned(true);
+            navigation.navigate('Details', { email: data })
+        }
+        // alert(`Type : ${type} \n Data : ${data}`);
+    }
+
 
     const handleScanBack = () => {
         navigation.goBack();
@@ -46,9 +62,10 @@ const ScanningScreen = ({ navigation, route }) => {
         return (
             <View style={styles.container}>
                 <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.scannerCont}>
-                    <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} />
+                    {
+                        isFocused ? <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} /> : null
+                    }
                 </LinearGradient>
-
                 <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleScanBack}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>

@@ -20,8 +20,8 @@ const InfoBtnScreen = ({ navigation, route }) => {
 
     const handleCamQr = () => {
         if (type === "T") {
-            // navigation.navigate('Scan');
-            navigation.navigate('Details');
+            navigation.navigate('Scan');
+            // navigation.navigate('Details');
         }
         if (type === "S") {
             navigation.navigate('QRCode')

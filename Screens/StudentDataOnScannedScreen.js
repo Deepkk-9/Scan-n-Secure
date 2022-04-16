@@ -1,25 +1,25 @@
 import { StyleSheet, Text, View, Platform, StatusBar, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, query, where, getDocs } from 'firebase/firestore/lite';
 import { db } from '../firebase';
 
 
-const StudentDataOnScannedScreen = () => {
+const StudentDataOnScannedScreen = ({ navigation, route }) => {
 
+    const { email } = route.params;
+    console.log("This is from the props " + email);
 
     const [details, setDetails] = useState({});
 
     useEffect(() => {
         const getStudentDetails = async () => {
-            const StudentCol = collection(db, 'Students');
+            const StudentCol = query(collection(db, 'Students'), where("email", "==", email));
             const studentSnapshot = await getDocs(StudentCol);
             const studentList = studentSnapshot.docs.map(doc => doc.data());
 
-            setDetails(...studentList)
+            setDetails(...studentList);
 
-            console.log(details);
         }
-
         getStudentDetails();
 
     }, [])
@@ -44,7 +44,6 @@ const StudentDataOnScannedScreen = () => {
                 <Text>Phone No. : </Text>
                 <Text> {details.phno} </Text>
             </View>
-            {/* <Button title='Get Student Data' onPress={getStudentDetails} /> */}
         </View>
     )
 }

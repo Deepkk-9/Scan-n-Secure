@@ -7,11 +7,15 @@ import {
 } from '@expo-google-fonts/poppins';
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import { auth } from '../firebase';
+
 
 const QRCodeScreen = ({ navigation, route }) => {
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
     });
+
+    const studentDetails = auth.currentUser;
 
     const handleQRBack = () => {
         navigation.goBack();
@@ -26,11 +30,10 @@ const QRCodeScreen = ({ navigation, route }) => {
                     <View style={styles.dpCont}>
                         <Image source={require('../assets/dp.png')} resizeMode="contain" style={styles.dp} />
                     </View>
-                    <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>Temp@domain</Text>
+                    <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>{studentDetails.email}</Text>
 
                     <QRCode
-                        // value={props.userMail} 
-                        value='deepkika2019php@student.mes.ac.in'
+                        value={studentDetails.email}
                         size={250} />
                 </View>
 
