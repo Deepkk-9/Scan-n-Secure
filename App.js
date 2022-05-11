@@ -5,6 +5,7 @@ import { AuthStackS } from './routes/AppStackS';
 import { useState } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
+import { LogBox } from 'react-native';
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
     }
   });
 
+  LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
   return (
     <NavigationContainer>

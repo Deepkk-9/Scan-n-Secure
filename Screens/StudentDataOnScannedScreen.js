@@ -44,6 +44,14 @@ const StudentDataOnScannedScreen = ({ navigation, route }) => {
                 <Text>Phone No. : </Text>
                 <Text> {details.phno} </Text>
             </View>
+            <View style={styles.arr}>
+                <Text>Paid Fees. : </Text>
+                <Text> {details.paid_fees} </Text>
+            </View>
+            <View style={styles.arr}>
+                <Text>Phone No. : </Text>
+                <Text> {details.remaining_fees} </Text>
+            </View>
         </View>
     )
 }

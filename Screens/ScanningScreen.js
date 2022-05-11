@@ -1,27 +1,22 @@
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Platform, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import AppLoading from 'expo-app-loading';
-import {
-    useFonts,
-    Poppins_400Regular,
-} from '@expo-google-fonts/poppins';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { auth } from '../firebase';
 
 
 const ScanningScreen = ({ navigation, route }) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const isFocused = useIsFocused();
 
     useFocusEffect(
         useCallback(() => {
             setScanned(false);
         }, [])
     )
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         (async () => {
@@ -31,32 +26,35 @@ const ScanningScreen = ({ navigation, route }) => {
     }, []);
 
 
+    if (hasPermission === null) {
+        return (
+            <View style={styles.container}>
+                <Text>
+                    Requesting for permission
+                </Text>
+            </View>
+        )
+    }
 
-    const handleBarCodeScanned = ({ type, data }) => {
-        if (data === auth.currentUser.email) {
+
+    if (hasPermission === false) {
+        return (
+            <View style={styles.container}>
+                {navigation.goBack()}
+            </View>
+        )
+    }
+
+    if (hasPermission === true) {
+
+        const handleBarCodeScanned = ({ type, data }) => {
             console.log("On scaned data : " + data);
             setScanned(true);
-            navigation.navigate('Details', { email: data })
+            navigation.navigate('Details', { email: data });
         }
-        // alert(`Type : ${type} \n Data : ${data}`);
-    }
 
-
-    const handleScanBack = () => {
-        navigation.goBack();
-    }
-
-    let [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    }
-    else {
-
-        if (hasPermission === false) {
-            return (alert("No access to camera"));
+        const handleScanBack = () => {
+            navigation.goBack();
         }
 
         return (
@@ -66,6 +64,7 @@ const ScanningScreen = ({ navigation, route }) => {
                         isFocused ? <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} /> : null
                     }
                 </LinearGradient>
+
                 <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleScanBack}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
@@ -75,6 +74,7 @@ const ScanningScreen = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
         )
+
     }
 }
 

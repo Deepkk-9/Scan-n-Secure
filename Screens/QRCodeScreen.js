@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Platform, StatusBar, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import {
     useFonts,
@@ -8,6 +8,9 @@ import {
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { auth } from '../firebase';
+import { storage } from '../firebase';
+import { getDownloadURL, ref } from 'firebase/storage';
+
 
 
 const QRCodeScreen = ({ navigation, route }) => {
@@ -16,6 +19,21 @@ const QRCodeScreen = ({ navigation, route }) => {
     });
 
     const studentDetails = auth.currentUser;
+    const [imgUrl, setImgUrl] = useState();
+
+    useEffect(() => {
+        const func = async () => {
+            const imgName = studentDetails.email;
+            console.log(imgName);
+            const reference = ref(storage, "/" + imgName + ".png")
+            await getDownloadURL(reference).then((re) => {
+                console.log("Yup ig Student image is getting fetched");
+                setImgUrl(re);
+            })
+        }
+
+        if (imgUrl == undefined) { func() };
+    }, []);
 
     const handleQRBack = () => {
         navigation.goBack();
@@ -28,7 +46,7 @@ const QRCodeScreen = ({ navigation, route }) => {
             <View style={styles.container}>
                 <View style={styles.qrcCont}>
                     <View style={styles.dpCont}>
-                        <Image source={require('../assets/dp.png')} resizeMode="contain" style={styles.dp} />
+                        <Image source={{ uri: imgUrl }} resizeMode="contain" style={styles.dp} />
                     </View>
                     <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>{studentDetails.email}</Text>
 

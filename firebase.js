@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getReactNativePersistence } from 'firebase/auth/react-native';
 import { getFirestore } from 'firebase/firestore/lite';
+import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -15,10 +16,11 @@ const firebaseConfig = {
     projectId: "scan-n",
     storageBucket: "scan-n.appspot.com",
     messagingSenderId: "637474944988",
-    appId: "1:637474944988:web:648e7b6645cd2783444119"
+    appId: "1:637474944988:web:648e7b6645cd2783444119",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 export const db = getFirestore(app);
+export const storage = getStorage(app);
