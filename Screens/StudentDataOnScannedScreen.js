@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Platform, StatusBar, Button } from 'react-native';
+import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore/lite';
 import { db } from '../firebase';
+import AppLoading from 'expo-app-loading';
 
 
 const StudentDataOnScannedScreen = ({ navigation, route }) => {
@@ -10,14 +11,22 @@ const StudentDataOnScannedScreen = ({ navigation, route }) => {
     console.log("This is from the props " + email);
 
     const [details, setDetails] = useState({});
+    const [validUser, isValidUser] = useState(null);
 
     useEffect(() => {
         const getStudentDetails = async () => {
             const StudentCol = query(collection(db, 'Students'), where("email", "==", email));
             const studentSnapshot = await getDocs(StudentCol);
-            const studentList = studentSnapshot.docs.map(doc => doc.data());
 
-            setDetails(...studentList);
+
+            if (!studentSnapshot.empty) {
+                const studentList = studentSnapshot.docs.map(doc => doc.data());
+                setDetails(...studentList);
+                isValidUser(true);
+            }
+            else {
+                isValidUser(false);
+            }
 
         }
         getStudentDetails();
@@ -26,34 +35,53 @@ const StudentDataOnScannedScreen = ({ navigation, route }) => {
 
 
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.arr}>
-                <Text>Department: </Text>
-                <Text> {details.dept} </Text>
+    if (validUser) {
+        return (
+            <View style={styles.container}>
+                <View style={styles.arr}>
+                    <Text>Department: </Text>
+                    <Text> {details.dept} </Text>
+                </View>
+                <View style={styles.arr}>
+                    <Text>Email: </Text>
+                    <Text>{details.email}</Text>
+                </View>
+                <View style={styles.arr}>
+                    <Text>Name: </Text>
+                    <Text> {details.name} </Text>
+                </View>
+                <View style={styles.arr}>
+                    <Text>Phone No. : </Text>
+                    <Text> {details.phno} </Text>
+                </View>
+                <View style={styles.arr}>
+                    <Text>Paid Fees. : </Text>
+                    <Text> {details.paid_fees} </Text>
+                </View>
+                <View style={styles.arr}>
+                    <Text>Phone No. : </Text>
+                    <Text> {details.remaining_fees} </Text>
+                </View>
             </View>
-            <View style={styles.arr}>
-                <Text>Email: </Text>
-                <Text>{details.email}</Text>
+        )
+    }
+    else if (validUser == null) {
+        return (
+            <AppLoading />
+        )
+    }
+    else {
+        return (
+            <View style={styles.container}>
+                {alert("User does not exist", navigation.goBack())}
+                <Text>
+                    Invalid User
+                </Text>
             </View>
-            <View style={styles.arr}>
-                <Text>Name: </Text>
-                <Text> {details.name} </Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Phone No. : </Text>
-                <Text> {details.phno} </Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Paid Fees. : </Text>
-                <Text> {details.paid_fees} </Text>
-            </View>
-            <View style={styles.arr}>
-                <Text>Phone No. : </Text>
-                <Text> {details.remaining_fees} </Text>
-            </View>
-        </View>
-    )
+
+        )
+    }
+
 }
 
 export default StudentDataOnScannedScreen

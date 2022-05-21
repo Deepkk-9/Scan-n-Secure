@@ -7,9 +7,13 @@ import {
 } from '@expo-google-fonts/poppins';
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import Card from './Card';
 import { auth } from '../firebase';
 import { storage } from '../firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
+import { db } from '../firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore/lite';
+
 
 
 
@@ -20,6 +24,8 @@ const QRCodeScreen = ({ navigation, route }) => {
 
     const studentDetails = auth.currentUser;
     const [imgUrl, setImgUrl] = useState();
+    const [details, setDetails] = useState({});
+    const [validUser, isValidUser] = useState(null);
 
     useEffect(() => {
         const func = async () => {
@@ -27,13 +33,32 @@ const QRCodeScreen = ({ navigation, route }) => {
             console.log(imgName);
             const reference = ref(storage, "/" + imgName + ".png")
             await getDownloadURL(reference).then((re) => {
-                console.log("Yup ig Student image is getting fetched");
                 setImgUrl(re);
             })
         }
 
         if (imgUrl == undefined) { func() };
+
+        const getStudentDetails = async () => {
+            const StudentCol = query(collection(db, 'Students'), where("email", "==", studentDetails.email));
+            const studentSnapshot = await getDocs(StudentCol);
+
+
+            if (!studentSnapshot.empty) {
+                const studentList = studentSnapshot.docs.map(doc => doc.data());
+                setDetails(...studentList);
+                isValidUser(true);
+            }
+            else {
+                isValidUser(false);
+            }
+
+        }
+        getStudentDetails();
+
     }, []);
+
+    console.log(details.name);
 
     const handleQRBack = () => {
         navigation.goBack();
@@ -44,24 +69,34 @@ const QRCodeScreen = ({ navigation, route }) => {
     } else {
         return (
             <View style={styles.container}>
+
+                <Card
+                    userImg={imgUrl}
+                    name={validUser ? details.name : null}
+                    dept={validUser ? details.dept : null}
+                    email={studentDetails.email}
+                    add_no={validUser ? details.admission_no : null}
+                    adcyear={validUser ? details.academic_year : null} />
+
                 <View style={styles.qrcCont}>
                     <View style={styles.dpCont}>
                         <Image source={{ uri: imgUrl }} resizeMode="contain" style={styles.dp} />
                     </View>
-                    <Text style={{ fontFamily: "Poppins_400Regular", marginTop: 65, marginBottom: 25 }}>{studentDetails.email}</Text>
+                    <Text style={{ fontFamily: "Poppins_500Medium", marginTop: 65, marginBottom: 25, textAlign: "center" }}>{studentDetails.email}</Text>
 
                     <QRCode
                         value={studentDetails.email}
-                        size={250} />
+                        size={200} />
                 </View>
 
-                <TouchableOpacity style={{ marginVertical: 50 }} onPress={handleQRBack}>
+                <TouchableOpacity onPress={handleQRBack}>
                     <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
                         <Text style={styles.qrBtntxt}>
                             Back
                         </Text>
                     </LinearGradient>
                 </TouchableOpacity>
+
             </View>
         )
     }
@@ -74,20 +109,19 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         alignItems: 'center',
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         backgroundColor: "#F3F3F3",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
     },
 
     qrcCont: {
-        width: "85%",
-        height: "50%",
         backgroundColor: "#fff",
         alignItems: "center",
         borderRadius: 10,
         paddingHorizontal: 20,
         paddingBottom: 15,
-        marginVertical: 25
+        marginTop: 30,
+        paddingBottom: 30
     },
 
     dpCont: {
@@ -96,17 +130,12 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         position: "absolute",
-        top: "-12%"
+        top: "-15%"
     },
 
     dp: {
         height: "100%",
         width: "100%"
-    },
-
-    qrcode: {
-        width: "100%",
-        height: 250
     },
 
     qrBtn: {

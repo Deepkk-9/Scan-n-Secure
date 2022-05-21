@@ -61,7 +61,7 @@ const ScanningScreen = ({ navigation, route }) => {
             <View style={styles.container}>
                 <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.scannerCont}>
                     {
-                        isFocused ? <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} /> : null
+                        isFocused ? <BarCodeScanner barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]} onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={styles.scanner} /> : null
                     }
                 </LinearGradient>
 

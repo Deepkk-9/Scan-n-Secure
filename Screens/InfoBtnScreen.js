@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Platform, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -21,7 +21,6 @@ const InfoBtnScreen = ({ navigation, route }) => {
     const handleCamQr = () => {
         if (type === "T") {
             navigation.navigate('Scan');
-            // navigation.navigate('Details');
         }
         if (type === "S") {
             navigation.navigate('QRCode')
@@ -40,31 +39,60 @@ const InfoBtnScreen = ({ navigation, route }) => {
         return <AppLoading />;
     } else {
         return (
-            <View style={styles.container}>
-                <Image source={require('../assets/mes-logo.png')} style={styles.logo} />
+            <ScrollView>
+                <View style={styles.container}>
+                    <Image source={require('../assets/mes-logo.png')} style={styles.logo} />
 
-                <Text style={styles.txt}>
-                    {title}
-                </Text>
+                    <Text style={styles.txt}>
+                        {title}
+                    </Text>
 
-                <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleCamQr}>
-                    <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
-                        <Text style={styles.qrBtntxt}>
-                            {btnDesc}
+                    <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleCamQr}>
+                        <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
+                            <Text style={styles.qrBtntxt}>
+                                {btnDesc}
+                            </Text>
+                            <MaterialIcons name="qr-code-scanner" size={32} color="white" style={styles.qrMIcon} />
+                        </LinearGradient>
+                    </TouchableOpacity>
+
+                    <Text style={styles.guide}>
+                        You will be provided a digitally signed secured QR code. This can be authenticated online using the verification utility provided by this app.
+                        {"\n\n"}
+                        <Text style={[styles.boldS, styles.bold]}>Steps for verification:</Text>
+                        {"\n\n"}
+                        <Text style={styles.bold}>1.</Text>  Click on the “Scan QR Code” button
+                        {"\n\n"}
+                        <Text style={styles.bold}>2.</Text>  A notification will prompt to activate your device’s camera
+                        {"\n\n"}
+                        <Text style={styles.bold}>3.</Text>  Point the camera to the QR code that will appear on the other device
+                        {"\n\n"}
+                        <Text style={styles.bold}>4.</Text>  Please keep the following points in mind while scanning the QR code {":"}
+                        {"\n\n"}
+                        <Text style={styles.italic}>
+                            {'\t\t'}{'\u2B57'}  QR code should cover at-least 70%-80% of screen
+                            {"\n"}
+                            {'\t\t'}{'\u2B57'}  Complete QR code should be part of camera frame
+                            {"\n"}
+                            {'\t\t'}{'\u2B57'}  QR code should be parallel to the camera
+                            {"\n"}
+                            {'\t\t'}{'\u2B57'}  Camera should be hold steadily for at-least 5 sec
                         </Text>
-                        <MaterialIcons name="qr-code-scanner" size={32} color="white" style={styles.qrMIcon} />
-                    </LinearGradient>
-                </TouchableOpacity>
+                        {"\n\n"}
+                        <Text style={styles.bold}>5.</Text>  On successful verification the needed data will be displayed on the screen
 
-                <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleSignOut}>
-                    <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
-                        <FontAwesome name="sign-out" size={24} color="white" style={styles.qrMIcon} />
-                    </LinearGradient>
-                </TouchableOpacity>
+                    </Text>
 
-                <Text>
-                </Text>
-            </View>
+                    <TouchableOpacity style={{ marginVertical: 20 }} onPress={handleSignOut}>
+                        <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.qrBtn}>
+                            <FontAwesome name="sign-out" size={24} color="white" style={styles.qrMIcon} />
+                        </LinearGradient>
+                    </TouchableOpacity>
+
+                    <Text>
+                    </Text>
+                </View>
+            </ScrollView>
         )
     }
 }
@@ -91,7 +119,15 @@ const styles = StyleSheet.create({
         fontSize: 25
     },
 
+    guide: {
+        fontFamily: "Poppins_400Regular",
+        paddingHorizontal: 30,
+        marginVertical: 10,
+        fontSize: 14,
+    },
+
     qrMIcon: {
+        fontFamily: "Poppins_400Regular",
         marginHorizontal: 15,
     },
 
@@ -108,5 +144,21 @@ const styles = StyleSheet.create({
         marginHorizontal: 15,
         color: "#fff",
         fontSize: 17
+    },
+
+    bold:
+    {
+        fontWeight: "bold",
+    },
+
+    italic:
+    {
+        fontWeight: "700",
+        fontSize: 11
+    },
+
+    boldS:
+    {
+        fontSize: 20,
     }
 })

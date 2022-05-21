@@ -7,9 +7,10 @@ import {
     Poppins_700Bold,
     Poppins_400Regular,
 } from '@expo-google-fonts/poppins';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -21,19 +22,23 @@ const LoginScreen = ({ navigation }) => {
 
     const [mail, setMail] = useState();
     const [pass, setPass] = useState();
-    const [loginCheck, setLoginCheck] = useState(null);
+    const [secureEnter, setsecureEnter] = useState(true);
+    const [icon, setIcon] = useState('eye');
 
     const userLogin = () => {
         signInWithEmailAndPassword(auth, mail, pass)
             .then((userCredential) => {
-                // Signed in 
                 const user = userCredential.user;
-                console.log(user);
-                // ...
             })
             .catch((error) => {
-                console.log(error);
+                alert("Invalid User");
             });
+    }
+
+    const passwordVisibility = () => {
+        setsecureEnter(!secureEnter);
+
+        setIcon(secureEnter ? "eye-off" : "eye");
     }
 
     if (!fontsLoaded) {
@@ -58,24 +63,23 @@ const LoginScreen = ({ navigation }) => {
                         onChangeText={text => setMail(text)}
                         value={mail} />
 
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="**********"
-                        secureTextEntry
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        onChangeText={text => setPass(text)}
-                        value={pass} />
+                    <View style={[styles.inputs, styles.passInp]}>
+                        <TextInput
+                            style={{ flex: 1 }}
+                            placeholder="**********"
+                            secureTextEntry={secureEnter}
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            onChangeText={text => setPass(text)}
+                            value={pass}
+                        />
+
+                        <TouchableOpacity onPress={passwordVisibility}>
+                            <Icon name={icon} size={20} />
+                        </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity style={styles.loginBtn} onPress={userLogin}>
-                        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16, fontFamily: "Poppins_400Regular" }} >Login</Text>
-                    </TouchableOpacity>
-
-                    <Text>
-                        or
-                    </Text>
-
-                    <TouchableOpacity style={styles.loginBtn}>
                         <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16, fontFamily: "Poppins_400Regular" }} >Login</Text>
                     </TouchableOpacity>
                 </View>
@@ -134,6 +138,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginVertical: 15
+    },
+
+    passInp: {
+        flexDirection: "row",
     },
 
     loginBtn: {

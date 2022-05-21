@@ -5,7 +5,8 @@ import { AuthStackS } from './routes/AppStackS';
 import { useState } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
-import { LogBox } from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
+LogBox.ignoreAllLogs();
 
 
 export default function App() {
@@ -14,7 +15,6 @@ export default function App() {
 
   onAuthStateChanged(auth, user => {
 
-    console.log(user);
     if (user != null) {
       let getDomain = (user.email);
       let checkDomain = getDomain.substring(getDomain.indexOf("@"));
@@ -34,7 +34,6 @@ export default function App() {
     }
   });
 
-  LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
   return (
     <NavigationContainer>
@@ -42,3 +41,9 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  mainCont: {
+    backgroundColor: "#FFF"
+  }
+})
