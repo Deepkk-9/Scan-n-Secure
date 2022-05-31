@@ -12,7 +12,7 @@ const Card = (props) => {
     return (
         <View style={styles.containerM}>
             <LinearGradient colors={['#6F55CB', '#B151C3']} style={styles.container}>
-                <Image source={require("../assets/mes-logo-blur.png")} style={styles.logoImg} />
+                <Image source={require("../../assets/mes-logo-blur.png")} style={styles.logoImg} />
 
                 <Text style={styles.data}>
                     Pillai HOC College of Engineering and Technology
@@ -26,11 +26,9 @@ const Card = (props) => {
                     <View>
                         <Text style={styles.white}>
                             {props.name}
-                            {/* Deep K Kawalee */}
                         </Text>
                         <Text style={styles.white}>
                             {props.dept}
-                            {/* Diploma Computer 2019 */}
                         </Text>
                         <Text style={styles.white}>
                             {props.email}
@@ -45,7 +43,7 @@ const Card = (props) => {
                     <Text style={styles.white}>
                         {props.add_no}
                     </Text>
-                    <Image source={require("../assets/pillai-logo-w.png")} />
+                    <Image source={require("../../assets/pillai-logo-w.png")} />
                 </View>
 
             </LinearGradient>

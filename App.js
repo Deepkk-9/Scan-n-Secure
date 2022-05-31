@@ -5,7 +5,7 @@ import { AuthStackS } from './routes/AppStackS';
 import { useState } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
-import { LogBox, StyleSheet } from 'react-native';
+import { LogBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
 
@@ -19,6 +19,8 @@ export default function App() {
       let getDomain = (user.email);
       let checkDomain = getDomain.substring(getDomain.indexOf("@"));
       console.log(checkDomain);
+      // deepkika2019@student.mes.ac.in
+
       if (checkDomain === "@student.mes.ac.in") {
         setIsSignedIn(true);
       }
@@ -42,8 +44,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  mainCont: {
-    backgroundColor: "#FFF"
-  }
-})

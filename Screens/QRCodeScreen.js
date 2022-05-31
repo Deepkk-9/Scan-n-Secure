@@ -7,7 +7,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
-import Card from './Card';
+import Card from './components/Card';
 import { auth } from '../firebase';
 import { storage } from '../firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
